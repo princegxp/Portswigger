@@ -1,0 +1,48 @@
+### Vertical Privilege Escalation: Simplified Explanation -- By:- Glaron Pinto
+
+**What is Vertical Privilege Escalation?**
+- Vertical privilege escalation happens when an application fails to protect sensitive features, allowing regular users to access them without proper authorization.
+
+**Basic Example:**
+- Imagine a website where admin functions are only linked on the admin's welcome page, not on a regular user's page.
+- However, if a regular user guesses the admin URL (e.g., `https://insecure-website.com/admin`), they might access it without any restrictions.
+
+**How Can This Happen?**
+1. **Direct URL Access:**
+   - The admin page URL might be simple and not protected by login checks.
+   - For example, `https://insecure-website.com/admin` might be accessible by any user, not just admins.
+
+2. **URL Disclosure:**
+   - Sensitive URLs can sometimes be found in files meant for search engines, like `robots.txt`, which should not be public.
+   - Example: `https://insecure-website.com/robots.txt` might list the admin URL.
+
+3. **Brute-Forcing URLs:**
+   - Attackers can use tools to try many possible URLs until they find the admin page.
+
+**Security by Obscurity:**
+- Sometimes, developers try to hide sensitive URLs by making them complex or obscure.
+- Example: `https://insecure-website.com/administrator-panel-yb556`
+
+**Why Hiding URLs Isn't Enough:**
+- Even if the URL is complex, it can still be leaked.
+- Example: A script meant for admins might contain the admin URL and is visible to all users.
+- JavaScript Example:
+
+```javascript
+  <script>
+      var isAdmin = false;
+      if (isAdmin) {
+          var adminPanelTag = document.createElement('a');
+          adminPanelTag.setAttribute('href', 'https://insecure-website.com/administrator-panel-yb556');
+          adminPanelTag.innerText = 'Admin panel';
+      }
+  </script>
+  ```
+
+- This script checks if the user is an admin and then creates a link to the admin panel.
+- The URL (`https://insecure-website.com/administrator-panel-yb556`) is in the script, which any user can see by viewing the page source.
+
+**Key Takeaways:**
+- Sensitive functionality must have proper access controls, not just hidden URLs.
+- Ensure only authorized users can access admin pages, regardless of how obscure the URLs are.
+- Regularly audit and secure your application's access control mechanisms. 
