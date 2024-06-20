@@ -1,0 +1,65 @@
+### Path Traversal: Simplified Explanation --By:- Glaron Pinto
+
+**What is Path Traversal?**
+- Path traversal, also known as directory traversal, is a type of vulnerability that allows attackers to access files on a server that they shouldn't be able to read. This can include:
+  - Application code and data.
+  - Credentials for back-end systems.
+  - Sensitive operating system files.
+
+**How Does It Work?**
+- Attackers manipulate the file paths used by the application to read or sometimes write to files outside of the intended directory.
+
+**Example Scenario:**
+- Imagine a shopping app that shows images of items for sale.
+- The app loads an image using a URL like this: 
+
+```
+  <img src="/loadImage?filename=218.png">
+```
+
+- The server code might look for images in a specific directory, e.g., `/var/www/images/`, and append the filename to this directory:
+
+```
+  /var/www/images/218.png
+```
+
+- If the application doesn't protect against path traversal, an attacker can manipulate the filename parameter to access other files.
+
+**Path Traversal Attack:**
+- An attacker changes the filename parameter to something like `../../../etc/passwd`:
+
+```
+  https://insecure-website.com/loadImage?filename=../../../etc/passwd
+```
+
+- The `../` sequences mean "move up one directory level". So, `../../../etc/passwd`:
+  - Moves up from `/var/www/images/` to the root directory `/`.
+  - Then accesses `/etc/passwd`.
+
+**Resulting Path:**
+- The application ends up reading:
+  
+```
+  /etc/passwd
+```
+
+- This file contains user information on Unix-based systems, but attackers could use the same method to access other sensitive files.
+
+**Windows Example:**
+- On Windows, both `../` and `..\` can be used.
+- An attacker might use a URL like:
+
+  ```
+    https://insecure-website.com/loadImage?filename=..\..\..\windows\win.ini
+  ```
+
+- This path moves up three directory levels and accesses `win.ini`.
+
+**Key Points:**
+- Path traversal vulnerabilities allow attackers to read or write files outside the intended directories.
+- Always validate and sanitize user input to prevent such attacks.
+- Use secure coding practices to avoid path traversal issues.
+
+**Safe Practice:**
+- Ensure user inputs are strictly controlled and validated.
+- Implement proper access controls to restrict file access to authorized users only.
