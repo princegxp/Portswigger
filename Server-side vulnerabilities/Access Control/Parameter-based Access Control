@@ -1,0 +1,36 @@
+### Parameter-Based Access Control: Simplified Explanation -- By:- Glaron Pinto
+
+**What is Parameter-Based Access Control?**
+- Some applications check a user's access level when they log in and store this information in a place the user can control. This can include:
+  - A hidden field in a form.
+  - A cookie (a small piece of data stored by the browser).
+  - A query string parameter in the URL.
+
+**Why is This Insecure?**
+- Users can easily change these values and trick the application into giving them higher privileges than they should have.
+
+**Examples:**
+
+1. **Hidden Field:**
+   - The user's role is stored in a hidden form field.
+   - Example: `<input type="hidden" name="role" value="admin">`
+   - A user can edit this field in their browser to change their role.
+
+2. **Cookie:**
+   - The user's role is stored in a cookie.
+   - Example: `role=admin`
+   - A user can modify this cookie using browser tools.
+
+3. **Query String Parameter:**
+   - The user's role is included in the URL.
+   - Example: `https://insecure-website.com/login/home.jsp?admin=true` or `https://insecure-website.com/login/home.jsp?role=1`
+   - A user can change the URL to gain unauthorized access.
+
+**Key Points:**
+- Storing access control information in places users can modify is risky.
+- Users can easily change hidden fields, cookies, or URL parameters to access restricted areas.
+- Access control should be enforced on the server side, not by trusting user-provided data.
+
+**Safe Practice:**
+- Validate user roles and permissions on the server side.
+- Do not rely on client-side controls to enforce security.
