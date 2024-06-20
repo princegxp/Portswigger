@@ -1,0 +1,56 @@
+### Horizontal Privilege Escalation: Simplified Explanation
+
+**What is Horizontal Privilege Escalation?**
+- Horizontal privilege escalation occurs when a user accesses resources or data belonging to another user instead of their own.
+- Example: An employee accessing the records of other employees.
+
+**How Does It Happen?**
+- Similar to vertical privilege escalation but targets resources at the same privilege level.
+- Example URL:
+
+  ```
+  https://insecure-website.com/myaccount?id=123
+  ```
+
+  - Here, `id=123` identifies the user's account.
+  - An attacker changes `id=123` to another user's ID, like `id=456`, to access that user's account.
+
+**Insecure Direct Object Reference (IDOR):**
+- This is an example of IDOR, where user-controlled parameters are used to access resources directly.
+- If parameters like user IDs are not properly secured, attackers can manipulate them to access unauthorized data.
+
+**Preventing Horizontal Privilege Escalation:**
+- Use unpredictable identifiers, such as GUIDs, instead of sequential numbers.
+- Validate user permissions on the server side to ensure they are accessing only their own data.
+
+**Example of GUIDs:**
+- GUIDs are complex and not easily guessable.
+- Example:
+  
+```
+  https://insecure-website.com/myaccount?id=5d8e5f2a-3f6b-4f98-b9a1-6b8e5e8d8b8a
+```
+
+- Even with GUIDs, if they are exposed elsewhere in the application (like in user messages or reviews), they can still be targeted.
+
+**Horizontal to Vertical Privilege Escalation:**
+- Sometimes, horizontal privilege escalation can lead to vertical privilege escalation.
+- If an attacker accesses another user's account, especially an admin's, they might gain higher-level access.
+
+**Example Scenario:**
+1. **Horizontal Escalation:**
+   - Attacker changes URL to access another user's account:
+
+```
+  https://insecure-website.com/myaccount?id=456
+```
+
+2. **Vertical Escalation:**
+   - If the target user is an admin, the attacker gains access to the admin page.
+   - The admin page might allow changing the admin's password or provide access to admin functions.
+
+**Key Points:**
+- Horizontal privilege escalation lets attackers access other users' data at the same privilege level.
+- Properly secure and validate user-controlled parameters.
+- Use complex, non-predictable identifiers.
+- Ensure robust permission checks on the server side.
