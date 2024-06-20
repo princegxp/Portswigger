@@ -1,0 +1,50 @@
+### Access Control: Simplified Explanation -- By:- Glaron Pinto
+
+**What is Access Control?**
+- Access control is about deciding who can do what within a system. It ensures that only authorized users can perform certain actions or access specific resources.
+
+**Key Components in Web Applications:**
+1. **Authentication:**
+   - Confirms the identity of the user (e.g., logging in with a username and password).
+
+2. **Session Management:**
+   - Keeps track of the user's identity during their interaction with the application (e.g., through session cookies).
+
+3. **Access Control:**
+   - Determines if the authenticated user has permission to perform the requested action (e.g., editing a profile, accessing admin pages).
+
+
+**Why is Access Control Important?**
+- Ensures that users can only access information and perform actions they are authorized for.
+- Prevents unauthorized access to sensitive data or critical functions.
+
+**Common Issues with Access Control:**
+- **Broken Access Controls:**
+  - These are frequent and can lead to serious security vulnerabilities. 
+  - They occur when the application does not properly enforce who can do what.
+
+**Design and Management Challenges:**
+- **Complexity:**
+  - Access control involves applying various rules and policies, which can be complex to manage.
+  - It involves understanding and implementing business, organizational, and legal requirements.
+
+- **Human Error:**
+  - Designing access control systems requires human decisions, which can lead to mistakes.
+  - Misconfigured access controls can expose sensitive data or allow unauthorized actions.
+
+**Key Takeaways:**
+- **Authentication:** Verifies the user's identity.
+- **Session Management:** Keeps track of the user's session.
+- **Access Control:** Checks if the user has permission to perform the action.
+
+**Best Practices:**
+- Regularly review and update access control policies.
+- Implement the principle of least privilege, granting users only the permissions they need.
+- Use secure coding practices to avoid common access control issues.
+
+**Simple Example:**
+- A web app with user roles (e.g., regular users and admins).
+- **Authentication:** Users log in with their credentials.
+- **Session Management:** The app tracks their session using cookies.
+- **Access Control:** Admins can access the admin panel, but regular users cannot.
+
