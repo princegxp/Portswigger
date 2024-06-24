@@ -1,0 +1,49 @@
+### Authentication Vulnerabilities: Simplified Explanation -- By:- Glaron Pinto
+
+**What are Authentication Vulnerabilities?**
+- Authentication vulnerabilities are weaknesses in the process that verifies a user's identity.
+- They are critical because they directly affect security and can lead to unauthorized access to sensitive data and functions.
+
+**Why Are They Important?**
+- These vulnerabilities can let attackers:
+  - Access sensitive information.
+  - Use application functionality meant for other users.
+  - Create more opportunities for further attacks.
+
+
+**Difference Between Authentication and Authorization:**
+
+1. **Authentication:**
+   - Confirms a user's identity.
+   - Example: Checking if the person logging in as "Carlos123" is really Carlos.
+
+---------------------------------------------------------------------------------
+
+2. **Authorization:**
+   - Determines what actions a verified user is allowed to perform.
+   - Example: Once Carlos123 is logged in, checking if he has permission to delete another user's account.
+
+
+**Simple Example to Understand:**
+
+- **Authentication:**
+  - When Carlos123 tries to log in, the system checks his username and password.
+  - If they match, Carlos123 is authenticated.
+
+- **Authorization:**
+  - After Carlos123 is authenticated, the system checks what actions he is allowed to perform.
+  - Carlos123 might be allowed to view his profile but not to delete other users' accounts.
+
+**Key Points:**
+- **Authentication:** Verifies who you are.
+- **Authorization:** Verifies what you can do after your identity is confirmed.
+
+**Importance:**
+- Strong authentication ensures that only legitimate users can log in.
+- Proper authorization ensures users can only access and perform actions they are permitted to.
+
+**How to Identify and Fix Authentication Vulnerabilities:**
+- Regularly test your authentication processes for weaknesses.
+- Implement strong authentication measures (e.g., multi-factor authentication).
+- Ensure authorization checks are correctly enforced for all actions and data access.
+
