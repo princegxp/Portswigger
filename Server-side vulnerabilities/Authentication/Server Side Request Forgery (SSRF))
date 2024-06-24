@@ -1,0 +1,73 @@
+### Server-Side Request Forgery (SSRF): Simplified Explanation -- By:- Glaron Pinto
+
+**What is SSRF?**
+- SSRF is a vulnerability where an attacker tricks the server into making requests to unintended locations.
+
+**How Does SSRF Work?**
+- An attacker can manipulate the server to connect to internal or external systems it shouldn’t access.
+- This can leak sensitive data or allow unauthorized actions.
+
+
+**Example Scenario:**
+- Imagine a shopping app that checks stock by querying a back-end API.
+- Normal request to check stock:
+ 
+```
+  POST /product/stock
+  Content-Type: application/x-www-form-urlencoded
+
+  stockApi=http://stock.weliketoshop.net:8080/product/stock/check?productId=6&storeId=1  
+```
+
+- This request tells the server to check the stock status from the given URL.
+
+
+**SSRF Attack Example:**
+- An attacker changes the URL to a local server address:
+
+  ```
+  POST /product/stock
+  Content-Type: application/x-www-form-urlencoded
+
+  stockApi=http://localhost/admin
+  ```
+
+- The server makes a request to `http://localhost/admin` and returns the response to the attacker.
+- The `/admin` URL might contain sensitive admin information usually not accessible to regular users.
+
+**Why Is This a Problem?**
+- Servers sometimes trust requests from themselves (local requests) more than from external sources.
+- If the application doesn't check these internal requests properly, it can expose sensitive data.
+
+
+**Reasons for Trusting Local Requests:**
+1. **Access Control Bypass:**
+   - Access checks might be done by a component in front of the server. Local requests skip this check.
+   
+2. **Disaster Recovery:**
+   - Admin access might be allowed from the local machine without logging in to recover from credential loss.
+
+3. **Different Ports:**
+   - Admin interfaces might run on different ports, not directly accessible by users, but accessible via SSRF.
+
+**Critical Nature of SSRF:**
+- SSRF is dangerous because trusted local requests can bypass normal security controls.
+
+
+**SSRF Against Back-End Systems:**
+- Attackers can also target internal systems with non-routable private IP addresses.
+- Example:
+ 
+```
+  POST /product/stock
+  Content-Type: application/x-www-form-urlencoded
+
+  stockApi=http://192.168.0.68/admin
+```
+- This tricks the server into accessing an internal admin interface, exposing sensitive functionality without proper authentication.
+
+
+**Key Takeaways:**
+- SSRF lets attackers manipulate server requests to access unauthorized resources.
+- Servers must properly validate all URLs and requests, even those that appear to come from trusted sources.
+- Regular security testing and proper access controls can help prevent SSRF vulnerabilities.
