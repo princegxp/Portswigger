@@ -1,0 +1,82 @@
+### What are File Upload Vulnerabilities? -- By:-Glaron Pinto
+
+**File upload vulnerabilities** 
+occur when a website allows users to upload files without properly checking:
+- **File Name:** What the file is called.
+- **File Type:** What kind of file it is (e.g., image, document).
+- **File Contents:** What's actually inside the file.
+- **File Size:** How big the file is.
+
+**Why are they dangerous?** 
+- Even a basic image upload function can be tricked into accepting dangerous files, such as scripts that can execute code on the server.
+
+### How Do File Upload Vulnerabilities Arise?
+
+Even though websites usually have some restrictions on what files can be uploaded, these restrictions can often be flawed:
+- **Blacklisting Dangerous Files:** Developers may block certain file types but miss others or be tricked by attackers who manipulate file extensions.
+- **File Type Checking:** Some checks can be bypassed by changing file properties using tools like Burp Proxy.
+- **Inconsistent Validation:** Validation measures might not be applied consistently across the website, leading to exploitable gaps.
+
+### Exploiting Unrestricted File Uploads to Deploy a Web Shell
+
+The worst-case scenario is when you can upload a script that the server will run. This script, called a **web shell**, lets you execute commands on the server by sending HTTP requests.
+
+**Web Shell Example:**
+1. **Simple Web Shell:**
+   ```php
+   <?php echo file_get_contents('/path/to/target/file'); ?>
+   ```
+   - This reads and returns the contents of a file.
+
+
+2. **Versatile Web Shell:**
+   ```php
+   <?php echo system($_GET['command']); ?>
+   ```
+   - This runs a system command passed via a URL query parameter.
+
+
+**Example URL:**
+
+```
+GET /example/exploit.php?command=id HTTP/1.1
+```
+- This would run the `id` command on the server.
+
+## NOTE:- PLEASE REFER TO THE LAB ON REMOTE CODE EXECUTIION VIA WEB SHELL UPLOAD ON PORTSWIGGER TO UNDERSTAND THE BELOW BETTER.
+THE BELOW LAB HAS ONLY PARTIAL EXPLINATION AND WILL BE BETTER UNDERSTOOD BY GOING THROUGH THE SOLUTION ON THE LAB. !!
+
+### Lab Example: Exploiting a Vulnerable Image Upload Function 
+
+
+**Goal:** Upload a PHP web shell to read a secret file on the server.
+
+**Steps:**
+1. **Log In:** Use the provided credentials (wiener:peter).
+2. **Upload an Image:** Notice how you can upload an avatar image.
+3. **Check the Upload:** Verify the image upload by seeing it on your account page.
+4. **Intercept with Burp:** Use Burp Suite to see the GET request fetching your image.
+5. **Create a Malicious File:** Create a file called `exploit.php` with the following content:
+   
+```php
+   <?php echo file_get_contents('/home/carlos/secret'); ?>
+```
+
+6. **Upload the Malicious File:** Use the avatar upload function to upload `exploit.php`.
+7. **Execute the Web Shell:**
+   - In Burp Repeater, change the request path to point to your PHP file:
+    
+```
+   GET /files/avatars/exploit.php HTTP/1.1
+ ```
+   - Send the request to get the secret file's content.
+
+8. **Submit the Secret:** Use the secret to solve the lab.
+
+### Summary
+
+- **File Upload Vulnerabilities:** Occur when file uploads aren't properly checked.
+- **Risks:** Can lead to uploading and executing malicious scripts (web shells).
+- **Exploitation:** Upload a web shell, then send HTTP requests to execute commands on the server.
+- **Lab Example:** Demonstrates uploading a PHP web shell to read a secret file and solve the lab.
+
