@@ -1,0 +1,82 @@
+### Solving the OS Command Injection Lab: (THIS LAB IS EXPLAINED FOR SIMPLIFING UNDERSTANDING) --By:-Glaron Pinto
+
+**Objective:**
+- The goal is to exploit an OS command injection vulnerability in a product stock checker to determine the current user running the application by executing the `whoami` command.
+
+**Tools Needed:**
+- Burp Suite (a web vulnerability scanner and proxy tool).
+
+**Steps to Solve the Lab:**
+
+1. **Intercept the Request with Burp Suite:**
+   - Open Burp Suite and set it up as a proxy for your web browser.
+   - Navigate to the stock checker feature in the vulnerable web application.
+   - Look for a request that checks the stock level, typically something like:
+
+
+```
+     https://insecure-website.com/stockStatus?productID=381&storeID=29
+```
+
+
+2. **Capture the Request:**
+   - Use Burp Suite's "Proxy" tab to intercept the request made by the browser when you check the stock.
+   - Ensure interception is on, then perform a stock check on the website. Burp Suite should capture the request.
+
+
+3. **Modify the Request:**
+   - In Burp Suite, find the `storeID` parameter in the intercepted request.
+   - Change the value of the `storeID` parameter to include the `whoami` command using a command injection technique:
+     
+```
+     storeID=1|whoami
+```
+   - The modified request should look something like this:
+    
+```
+     GET /stockStatus?productID=381&storeID=1|whoami HTTP/1.1
+     Host: insecure-website.com
+```
+
+4. **Forward the Modified Request:**
+   - Forward the modified request in Burp Suite.
+   - Burp Suite sends the request to the server with the injected command.
+
+5. **Analyze the Response:**
+   - Check the server's response in Burp Suite.
+   - Look for the output of the `whoami` command within the response body.
+   - The response should contain the name of the current user running the application, confirming the command execution.
+
+**Detailed Breakdown of the Command Injection:**
+
+- **Original Parameter:**
+
+```
+  storeID=29
+```
+
+- **Injected Parameter:**
+
+```
+  storeID=1|whoami
+```
+
+- **How it Works:**
+  - The `|` character is a shell command separator that tells the server to execute the command on the right (`whoami`) after the command on the left (`1`).
+  - The application runs the following shell command:
+```
+  stockreport.pl 381 1|whoami
+```
+  - This effectively runs:
+
+```
+    stockreport.pl 381 1
+    whoami
+```
+  - The `whoami` command outputs the current user's name, which gets included in the server's response.
+
+**Summary:**
+- You used Burp Suite to intercept a request.
+- You modified the `storeID` parameter to inject the `whoami` command.
+- You forwarded the modified request and observed the response to find the current user.
+
