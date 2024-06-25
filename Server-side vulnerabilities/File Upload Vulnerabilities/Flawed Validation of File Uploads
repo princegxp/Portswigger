@@ -1,0 +1,77 @@
+### Exploiting Flawed Validation of File Uploads: Simplified Explanation -- By:- Glaron Pinto
+
+**What is File Upload Validation?**
+- Websites often let users upload files (e.g., images, documents).
+- To prevent attacks, they validate the type of files users upload to ensure they are safe.
+
+
+**Common File Upload Process:**
+1. **Form Submission:**
+   - Users fill out a form with fields like image upload, description, and username.
+   - The form sends a POST request with content type `multipart/form-data`.
+
+
+2. **Example Request:**
+
+
+```
+   POST /images HTTP/1.1
+   Host: normal-website.com
+   Content-Length: 12345
+   Content-Type: multipart/form-data; boundary=---------------------------012345678901234567890123456
+
+   ---------------------------012345678901234567890123456
+   Content-Disposition: form-data; name="image"; filename="example.jpg"
+   Content-Type: image/jpeg
+
+   [...binary content of example.jpg...]
+
+   ---------------------------012345678901234567890123456
+   Content-Disposition: form-data; name="description"
+
+   This is an interesting description of my image.
+
+   ---------------------------012345678901234567890123456
+   Content-Disposition: form-data; name="username"
+
+   wiener
+   ---------------------------012345678901234567890123456--
+```
+
+
+
+3. **Parts of the Request:**
+   - Each form input is sent as a separate part with headers.
+   - Headers include `Content-Disposition` and `Content-Type`.
+
+
+**Flawed File Type Validation:**
+- Some websites check the `Content-Type` header to ensure the file type is correct (e.g., only allowing `image/jpeg` or `image/png`).
+
+
+**Why This Can Be Problematic:**
+- If the server trusts this header without further checking the actual file content, attackers can bypass this validation.
+- Attackers can use tools like Burp Repeater to change the `Content-Type` header to a valid type while uploading a malicious file.
+
+
+**Example of Bypassing Validation:**
+1. **Change the Header:**
+   - An attacker uploads a malicious file but sets the `Content-Type` to `image/jpeg`.
+2. **Server Trusts Header:**
+   - If the server only checks the header, it accepts the file without checking the content.
+3. **Upload Malicious File:**
+   - The attacker successfully uploads a file that can execute code on the server.
+
+
+**Key Points:**
+- **Proper Validation:**
+  - Servers should not only check the `Content-Type` header but also validate the actual file content.
+- **Use Reliable Tools:**
+  - Tools like Burp Repeater can help test and bypass weak validation mechanisms.
+
+
+**Best Practices to Prevent Exploits:**
+- Implement thorough file validation by checking the file's actual content.
+- Do not rely solely on the `Content-Type` header for security.
+- Regularly update and test your security measures to prevent such vulnerabilities.
+
