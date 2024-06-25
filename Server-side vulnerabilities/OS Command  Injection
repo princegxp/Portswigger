@@ -1,0 +1,78 @@
+### OS Command Injection: Simplified Explanation --By:- Glaron Pinto
+
+**What is OS Command Injection?**
+- OS command injection, also known as shell injection, allows an attacker to execute operating system commands on the server running the application.
+- This can compromise the application, its data, and potentially other parts of the server infrastructure.
+
+**Why is it Dangerous?**
+- Attackers can gain full control over the application and its data.
+- They can move to other systems within the organization by exploiting trust relationships.
+
+**Useful Commands for OS Command Injection:**
+- After finding an OS command injection vulnerability, attackers might use these commands to gather information:
+  
+  **Linux Commands:**
+  - **Name of current user:** `whoami`
+  - **Operating system info:** `uname -a`
+  - **Network configuration:** `ifconfig`
+  - **Network connections:** `netstat -an`
+  - **Running processes:** `ps -ef`
+  
+  **Windows Commands:**
+  - **Name of current user:** `whoami`
+  - **Operating system info:** `ver`
+  - **Network configuration:** `ipconfig /all`
+  - **Network connections:** `netstat -an`
+  - **Running processes:** `tasklist`
+
+**Example Scenario:**
+- Imagine a shopping app that checks if an item is in stock using a URL like:
+  
+```
+  https://insecure-website.com/stockStatus?productID=381&storeID=29
+```
+
+- The app runs a shell command to get the stock information:
+  
+```
+  stockreport.pl 381 29
+```
+
+**Injecting OS Commands:**
+- An attacker can manipulate the input to execute their own commands.
+- Example of malicious input in the `productID` parameter:
+
+```
+  & echo aiwefwlguh &
+```
+
+- This makes the application run:
+
+```
+  stockreport.pl & echo aiwefwlguh & 29
+```
+
+**Output Explanation:**
+- The command produces three separate outputs:
+  1. **Original command without arguments:** Causes an error:
+     ```
+     Error - productID was not provided
+     ```
+  2. **Injected command (`echo`):** Outputs the string:
+     ```
+     aiwefwlguh
+     ```
+  3. **Remaining argument as command:** Causes another error:
+     ```
+     29: command not found
+     ```
+
+**Key Points:**
+- The `&` character separates commands, allowing multiple commands to run one after another.
+- Using `&` after the injected command helps ensure it runs independently of any following commands.
+
+**Best Practices to Prevent OS Command Injection:**
+- Validate and sanitize all user inputs.
+- Avoid using shell commands with user inputs.
+- Use safer alternatives like parameterized queries or APIs.
+
