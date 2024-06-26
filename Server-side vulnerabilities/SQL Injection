@@ -1,0 +1,84 @@
+
+
+### What is SQL Injection (SQLi)? --By:- Glaron Pinto
+
+**SQL injection (SQLi)** is a type of security flaw in web applications. It happens when an attacker can insert (or "inject") their own SQL code into the queries that the application runs on its database. This can let the attacker:
+- **View Data:** See data they shouldn't be able to see, like other users' information.
+- **Modify Data:** Change or delete data, affecting the application's content or behavior.
+- **Escalate Attacks:** Potentially take over the server or disrupt services.
+
+### How to Detect SQL Injection Vulnerabilities
+
+**Manual Detection:**
+1. **Single Quote Test:** Enter a single quote `'` in input fields and look for errors.
+2. **SQL Syntax Test:** Use SQL-specific syntax to see if the application behaves differently.
+3. **Boolean Conditions:** Try conditions like `OR 1=1` (always true) and `OR 1=2` (always false) to see how the application responds.
+4. **Time Delay Payloads:** Use payloads that cause a delay (like `SLEEP(5)`) to see if the response time changes.
+5. **OAST Payloads:** Use payloads that trigger out-of-band interactions to detect vulnerabilities.
+
+**Automated Detection:**
+- **Burp Scanner:** A tool that can quickly find SQL injection vulnerabilities.
+
+### Example: Retrieving Hidden Data
+
+Imagine a shopping website that shows products in different categories. When you click on the "Gifts" category, it sends a request like this:
+
+```
+https://insecure-website.com/products?category=Gifts
+```
+
+This makes the application run a SQL query to get the products:
+
+```sql
+SELECT * FROM products WHERE category = 'Gifts' AND released = 1
+```
+
+This query asks the database for all products in the "Gifts" category that are released (`released = 1`).
+
+**Attack Example:**
+1. **Removing Filters:** 
+   - By adding `'--` to the URL, you can remove the filter:
+     ```
+     https://insecure-website.com/products?category=Gifts'--
+     ```
+   - This changes the query to:
+     ```sql
+     SELECT * FROM products WHERE category = 'Gifts'--' AND released = 1
+     ```
+   - The `--` makes everything after it a comment, so the `AND released = 1` is ignored. Now, you see all products, even the unreleased ones.
+
+2. **Showing All Categories:**
+   - By adding `OR 1=1--`, you can make the query always true:
+     ```
+     https://insecure-website.com/products?category=Gifts'+OR+1=1--
+     ```
+   - This changes the query to:
+     ```sql
+     SELECT * FROM products WHERE category = 'Gifts' OR 1=1--' AND released = 1
+     ```
+   - The `OR 1=1` is always true, so the query returns all products.
+
+**Warning:** Be careful with `OR 1=1` because it can cause unexpected changes or data loss if it reaches other parts of the application, like updates or deletions.
+
+### Subverting Application Logic
+
+Imagine a login system that checks a username and password like this:
+
+```sql
+SELECT * FROM users WHERE username = 'wiener' AND password = 'bluecheese'
+```
+
+If you enter the username `administrator'--` and leave the password blank, it creates this query:
+
+```sql
+SELECT * FROM users WHERE username = 'administrator'--' AND password = ''
+```
+
+The `--` makes the rest of the query a comment, so the password check is ignored. This lets you log in as "administrator" without knowing the password.
+
+### Summary
+
+- **SQL Injection (SQLi):** A vulnerability where attackers can insert their own SQL code into your application's database queries.
+- **Detecting SQLi:** Use manual tests (like single quotes and boolean conditions) or automated tools (like Burp Scanner).
+- **Example Attacks:** Remove filters to see hidden data or modify queries to show all data.
+- **Subverting Logic:** Use SQL comments to bypass login checks and gain unauthorized access.
